@@ -37,63 +37,67 @@ let dividir = () => {
   }
 };
 
-var resultado = 0;
-
 let calcular = () => {
   let operacion = document.getElementById("input").value;
-
   let signo = [];
   let numeros = [];
+  let resultado = 0;
   let idNumero = 0;
   let largoNumbero = 0;
 
+  //* Eliminar ultimos signos
   while (isNaN(operacion.charAt(operacion.length - 1))) {
     operacion = operacion.substring(0, operacion.length - 1);
   }
-
+  //* Guardar valores y signos
   for (let i = 0; i < operacion.length; i++) {
     if (isNaN(operacion.charAt(i)) && operacion.charAt(i) != ".") {
-      if (i == 0 && operacion.charAt(0) == "-") {
+      if (signo.length != 0) {
+        numeros.push(operacion.substr(idNumero + 1, largoNumbero));
       } else {
-        if (signo.length != 0) {
-          numeros.push(operacion.substr(idNumero + 1, largoNumbero));
-        } else {
-          numeros.push(operacion.substr(idNumero, largoNumbero));
-        }
-        signo.push(operacion[i]);
-        idNumero = i;
-        largoNumbero = 0;
+        numeros.push(operacion.substr(idNumero, largoNumbero));
       }
+      signo.push(operacion[i]);
+      idNumero = i;
+      largoNumbero = 0;
     } else {
       ++largoNumbero;
     }
   }
   numeros.push(operacion.substr(idNumero + 1, operacion.length - idNumero));
 
-  let acum = 0;
+  //* Primer digito negativo
+  if (operacion.charAt(0) == "-") {
+    let resp = -numeros[1];
+    numeros.splice(0, 2);
+    numeros.unshift(resp);
+    signo.shift();
+  }
+
+  //* operaciones
   for (let i = 0; i < signo.length; i++) {
     if (signo[i] == "+") {
-      acum == 0
-        ? (acum = parseFloat(numeros[i]) + parseFloat(numeros[i + 1]))
-        : (acum += parseFloat(numeros[i + 1]));
+      resultado == 0
+        ? (resultado = parseFloat(numeros[i]) + parseFloat(numeros[i + 1]))
+        : (resultado += parseFloat(numeros[i + 1]));
     }
     if (signo[i] == "-") {
-      acum == 0
-        ? (acum = parseFloat(numeros[i]) - parseFloat(numeros[i + 1]))
-        : (acum -= parseFloat(numeros[i + 1]));
+      resultado == 0
+        ? (resultado = parseFloat(numeros[i]) - parseFloat(numeros[i + 1]))
+        : (resultado -= parseFloat(numeros[i + 1]));
     }
     if (signo[i] == "*") {
-      acum == 0
-        ? (acum = parseFloat(numeros[i]) * parseFloat(numeros[i + 1]))
-        : (acum *= parseFloat(numeros[i + 1]));
+      resultado == 0
+        ? (resultado = parseFloat(numeros[i]) * parseFloat(numeros[i + 1]))
+        : (resultado *= parseFloat(numeros[i + 1]));
     }
     if (signo[i] == "/") {
-      acum == 0
-        ? (acum = parseFloat(numeros[i]) / parseFloat(numeros[i + 1]))
-        : (acum /= parseFloat(numeros[i + 1]));
+      resultado == 0
+        ? (resultado = parseFloat(numeros[i]) / parseFloat(numeros[i + 1]))
+        : (resultado /= parseFloat(numeros[i + 1]));
     }
   }
-  resultado = acum;
+  //* Mostrar valores
   document.getElementById("input").value = resultado;
   resultado = 0;
 };
