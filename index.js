@@ -10,77 +10,94 @@ let ocho = () => (document.getElementById("input").value += 8);
 let nueve = () => (document.getElementById("input").value += 9);
 let punto = () => (document.getElementById("input").value += ".");
 
-var valores = [];
-var resultado = 0;
-var numOperadores;
-
 let suma = () => {
   let operacion = document.getElementById("input").value;
-
   if (operacion[operacion.length - 1] != "+") {
-    let indicador = operacion.lastIndexOf("+");
-    if (operacion.slice(indicador + 1) != "") {
-      valores.push(operacion.slice(indicador + 1));
-    }
     document.getElementById("input").value += "+";
   }
 };
 
 let restar = () => {
   let operacion = document.getElementById("input").value;
-
   if (operacion[operacion.length - 1] != "-") {
-    let indicador = operacion.lastIndexOf("-");
-    if (operacion.slice(indicador + 1) != "") {
-      valores.push(operacion.slice(indicador + 1));
-    }
     document.getElementById("input").value += "-";
-  } 
-}
-let multiplicar = () => (document.getElementById("input").value += "*");
-let dividir = () => (document.getElementById("input").value += "/");
+  }
+};
+
+let multiplicar = () => {
+  let operacion = document.getElementById("input").value;
+  if (operacion[operacion.length - 1] != "*") {
+    document.getElementById("input").value += "*";
+  }
+};
+let dividir = () => {
+  let operacion = document.getElementById("input").value;
+  if (operacion[operacion.length - 1] != "/") {
+    document.getElementById("input").value += "/";
+  }
+};
+
+var resultado = 0;
 
 let calcular = () => {
   let operacion = document.getElementById("input").value;
 
-  if (operacion.includes("+")) {
-    console.log('suma');
-    if (operacion[operacion.length - 1] != "+") {
-      let indicador = operacion.lastIndexOf("+");
-      if (operacion.slice(indicador + 1) != "") {
-        valores.push(operacion.slice(indicador + 1));
-      }
-    }
-    for (const numero of valores) {
-      resultado += parseInt(numero);
-    }
+  let signo = [];
+  let numeros = [];
+  let idNumero = 0;
+  let largoNumbero = 0;
+
+  while (isNaN(operacion.charAt(operacion.length - 1))) {
+    operacion = operacion.substring(0, operacion.length - 1);
   }
 
-  if (operacion.includes("-")) {
-    console.log('resta');
-    if (operacion[operacion.length - 1] != "-") {
-      let indicador = operacion.lastIndexOf("-");
-      if (operacion.slice(indicador + 1) != "") {
-        valores.push(operacion.slice(indicador + 1));
+  for (let i = 0; i < operacion.length; i++) {
+    if (isNaN(operacion.charAt(i)) && operacion.charAt(i) != ".") {
+      if (i == 0 && operacion.charAt(0) == "-") {
+      } else {
+        if (signo.length != 0) {
+          numeros.push(operacion.substr(idNumero + 1, largoNumbero));
+        } else {
+          numeros.push(operacion.substr(idNumero, largoNumbero));
+        }
+        signo.push(operacion[i]);
+        idNumero = i;
+        largoNumbero = 0;
       }
-    }
-    console.log(valores);
-    for (const numero of valores) {
-      resultado -= parseInt(numero);
+    } else {
+      ++largoNumbero;
     }
   }
+  numeros.push(operacion.substr(idNumero + 1, operacion.length - idNumero));
 
-
-
-
-
-
+  let acum = 0;
+  for (let i = 0; i < signo.length; i++) {
+    if (signo[i] == "+") {
+      acum == 0
+        ? (acum = parseFloat(numeros[i]) + parseFloat(numeros[i + 1]))
+        : (acum += parseFloat(numeros[i + 1]));
+    }
+    if (signo[i] == "-") {
+      acum == 0
+        ? (acum = parseFloat(numeros[i]) - parseFloat(numeros[i + 1]))
+        : (acum -= parseFloat(numeros[i + 1]));
+    }
+    if (signo[i] == "*") {
+      acum == 0
+        ? (acum = parseFloat(numeros[i]) * parseFloat(numeros[i + 1]))
+        : (acum *= parseFloat(numeros[i + 1]));
+    }
+    if (signo[i] == "/") {
+      acum == 0
+        ? (acum = parseFloat(numeros[i]) / parseFloat(numeros[i + 1]))
+        : (acum /= parseFloat(numeros[i + 1]));
+    }
+  }
+  resultado = acum;
   document.getElementById("input").value = resultado;
-  valores = [];
   resultado = 0;
 };
 
 let limpiar = () => {
   document.getElementById("input").value = "";
-  valores = [];
 };
