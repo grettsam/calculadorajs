@@ -8,7 +8,12 @@ let seis = () => (document.getElementById("input").value += 6);
 let siete = () => (document.getElementById("input").value += 7);
 let ocho = () => (document.getElementById("input").value += 8);
 let nueve = () => (document.getElementById("input").value += 9);
-let punto = () => (document.getElementById("input").value += ".");
+
+let punto = () => {
+  let operacion = document.getElementById("input").value;
+  if (operacion != "" && !isNaN(operacion[operacion.length - 1]))
+    document.getElementById("input").value += ".";
+};
 
 let suma = () => {
   let operacion = document.getElementById("input").value;
@@ -114,6 +119,11 @@ let calcular = () => {
   //* Mostrar valores
   document.getElementById("input").value = resultado;
   resultado = 0;
+};
+
+let borrar = () => {
+  let operacion = document.getElementById("input").value;
+  document.getElementById("input").value = operacion.substring(0, operacion.length - 1);
 };
 
 let limpiar = () => {
