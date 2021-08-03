@@ -117,7 +117,7 @@ let calcular = () => {
     }
   }
   //* Mostrar valores
-  document.getElementById("input").value = resultado;
+  document.getElementById("input").value = resultado.toFixed(3);
   resultado = 0;
 };
 
