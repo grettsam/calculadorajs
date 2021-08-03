@@ -12,29 +12,26 @@ let punto = () => (document.getElementById("input").value += ".");
 
 let suma = () => {
   let operacion = document.getElementById("input").value;
-  if (operacion[operacion.length - 1] != "+") {
+  if (operacion != "" && !isNaN(operacion[operacion.length - 1]))
     document.getElementById("input").value += "+";
-  }
 };
 
 let restar = () => {
   let operacion = document.getElementById("input").value;
-  if (operacion[operacion.length - 1] != "-") {
+  if (operacion[operacion.length - 1] != "-")
     document.getElementById("input").value += "-";
-  }
 };
 
 let multiplicar = () => {
   let operacion = document.getElementById("input").value;
-  if (operacion[operacion.length - 1] != "*") {
+  if (operacion != "" && !isNaN(operacion[operacion.length - 1]))
     document.getElementById("input").value += "*";
-  }
 };
+
 let dividir = () => {
   let operacion = document.getElementById("input").value;
-  if (operacion[operacion.length - 1] != "/") {
+  if (operacion != "" && !isNaN(operacion[operacion.length - 1]))
     document.getElementById("input").value += "/";
-  }
 };
 
 let calcular = () => {
@@ -44,23 +41,40 @@ let calcular = () => {
   let resultado = 0;
   let idNumero = 0;
   let largoNumbero = 0;
+  let negativo = false;
+  let neg = false;
 
   //* Eliminar ultimos signos
   while (isNaN(operacion.charAt(operacion.length - 1))) {
     operacion = operacion.substring(0, operacion.length - 1);
   }
+
   //* Guardar valores y signos
   for (let i = 0; i < operacion.length; i++) {
     if (isNaN(operacion.charAt(i)) && operacion.charAt(i) != ".") {
-      if (signo.length != 0) {
-        numeros.push(operacion.substr(idNumero + 1, largoNumbero));
+      if (negativo) {
+        neg = true;
       } else {
-        numeros.push(operacion.substr(idNumero, largoNumbero));
+        if (signo.length != 0) {
+          if (neg) {
+            numeros.push(
+              -parseFloat(operacion.substr(idNumero + 1, largoNumbero))
+            );
+            neg = false;
+          } else {
+            numeros.push(operacion.substr(idNumero + 1, largoNumbero));
+          }
+        } else {
+          numeros.push(operacion.substr(idNumero, largoNumbero));
+        }
+
+        signo.push(operacion[i]);
+        idNumero = i;
+        largoNumbero = 0;
+        negativo = true;
       }
-      signo.push(operacion[i]);
-      idNumero = i;
-      largoNumbero = 0;
     } else {
+      negativo = false;
       ++largoNumbero;
     }
   }
